@@ -1,3 +1,4 @@
+
 #pragma config(Sensor, dgtl1,  sn11,           sensorSONAR_inch)
 #pragma config(Sensor, dgtl3,  sn22,           sensorSONAR_inch)
 #pragma config(Sensor, dgtl5,  sn33,           sensorSONAR_inch)
@@ -38,10 +39,22 @@ task main()
 			s1 = SensorValue[sn11];
 			s2 = SensorValue[sn22];
 			s3 = SensorValue[sn33];
-			if(s1>=13.0 && s2>=12.0 && s3>=13.0){
-				motor[motor1] = 75;
+			if(s1>=15.0 && s2>=15.0 && s3>=15.0){
+				motor[motor1] = 73;
 				motor[servo1] = -57;
-				} else if(s1>=s3){
+				} else if(s2<=(s1||s3)){
+				if(s1>=s3){
+					motor[servo1] = -125;
+					delay(15);
+					motor[motor1] = -55;
+					delay(350);
+					}else if(s1<=s3){
+					motor[servo1] = 25;
+					delay(15);
+					motor[motor1] = -55;
+					delay(350);
+				}
+				}else if(s1>=s3){
 				left = true;
 				right = false;
 				motor[motor1] = 75;
@@ -65,16 +78,16 @@ task main()
 				}
 				motor[servo1] = 25;
 			} 
-			if(s1<=7.0 || s2<=7.0 || s3<=7.0){
+			if(s1<=7.0 || s2<=7.75 || s3<=7.0){
 				motor[motor1] = 0;
 				if(right == true){
 					motor[servo1] = -125;
 					} else {
 					motor[servo1] = 25;
 				}
-				delay(50);
+				delay(15);
 				motor[motor1] = -55;
-				delay(500);
+				delay(350);
 			}
 		}
 		motor[servo1] = ((vexRT[Ch1] / 2)+55)*-1;
