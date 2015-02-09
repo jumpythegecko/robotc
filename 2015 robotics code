@@ -1,4 +1,6 @@
-
+#pragma config(Sensor, in1,    L1,             sensorLineFollower)
+#pragma config(Sensor, in2,    L2,             sensorLineFollower)
+#pragma config(Sensor, in3,    L3,             sensorLineFollower)
 #pragma config(Sensor, dgtl1,  sn11,           sensorSONAR_inch)
 #pragma config(Sensor, dgtl3,  sn22,           sensorSONAR_inch)
 #pragma config(Sensor, dgtl5,  sn33,           sensorSONAR_inch)
@@ -11,6 +13,7 @@
 
 bool hdown;
 bool hopen;
+bool line;
 bool us;
 bool left;
 bool right;
@@ -19,6 +22,12 @@ int dn;
 float s1;
 float s2;
 float s3;
+float l1;
+float l2;
+float l3;
+bool ll1;
+bool ll2;
+bool ll3;
 
 task main()
 {
@@ -29,9 +38,61 @@ task main()
 	servopos = 0;
 	dn = 1;
 	us = false;
+	line = false;
+	ll1 = false;
+	ll2 = false;
+	ll3 = false;
 
 	while(1 == 1)
 	{
+		//l2 = SensorValue[L2];
+		while(line == true){
+			if(vexRT[Btn5D] == 1){
+				if(line == true){
+					line = false;
+					delay(250);
+					} else {
+					line = true;
+					delay(250);
+				}
+			}
+			l1 = SensorValue[L1];
+			l2 = SensorValue[L2];
+			l3 = SensorValue[L3];
+			if(l1>500){
+				ll1 = true;
+				} else {
+				ll1 = false;
+			}
+			if(l2>500){
+				ll2 = true;
+				} else {
+				ll2 = false;
+			}
+			if(l3>500){
+				ll3 = true;
+				} else {
+				ll3 = false;
+			}
+			if((ll1 && ll2 && ll3)||(ll1 == false && ll2 && ll3 == false)){
+				motor[motor1] = 30;
+				motor[servo1] = -57;
+				} else if(ll1 && ll2){
+				motor[motor1] = 30;
+				motor[servo1] = -40;
+				} else if(ll2 && ll3){
+				motor[motor1] = 30;
+				motor[servo1] = -75;
+			} else if(ll3){
+				motor[motor1] = 30;
+				motor[servo1] = -75;
+			} else if(ll1){
+				motor[motor1] = 30;
+				motor[servo1] = -40;
+			}
+		}
+
+
 		while(us == true){
 			if(vexRT[Btn6U] == 1){
 				us = false;
@@ -48,7 +109,7 @@ task main()
 					delay(15);
 					motor[motor1] = -55;
 					delay(350);
-					}else if(s1<=s3){
+					}else{
 					motor[servo1] = 25;
 					delay(15);
 					motor[motor1] = -55;
@@ -135,9 +196,17 @@ task main()
 		if(vexRT[Btn7R] == 1){
 			motor[handMotor] = -127/6  ;
 		}
-
 		if(vexRT[Btn6D] == 1){
 			us = true;
+		}
+		if(vexRT[Btn5D] == 1){
+			if(line == true){
+				line = false;
+				delay(250);
+				} else {
+				line = true;
+				delay(250);
+			}
 		}
 	}
 }
