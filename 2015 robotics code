@@ -46,6 +46,7 @@ task main()
 	while(1 == 1)
 	{
 		//l2 = SensorValue[L2];
+//-------------------------------Line_following-------------------------------//
 		while(line == true){
 			if(vexRT[Btn5D] == 1){
 				if(line == true){
@@ -91,8 +92,9 @@ task main()
 				motor[servo1] = -40;
 			}
 		}
-
-
+//-------------------------------End_Line_Following-------------------------------//
+		
+//-------------------------------Ultrasonic-------------------------------//
 		while(us == true){
 			if(vexRT[Btn6U] == 1){
 				us = false;
@@ -151,6 +153,9 @@ task main()
 				delay(350);
 			}
 		}
+//-------------------------------End_Ultrasonic-------------------------------//		
+		
+//-------------------------------Joystick_Input-------------------------------//		
 		motor[servo1] = ((vexRT[Ch1] / 2)+55)*-1;
 		if(vexRT[Btn5U] == 1){
 			dn = 3;
@@ -172,9 +177,6 @@ task main()
 		if(vexRT[Btn8R] == 1){
 			motor[handMotor] = -127;
 		}
-
-
-
 
 		if(vexRT[Btn7U] == 1){
 			if(servopos<0){
@@ -210,3 +212,4 @@ task main()
 		}
 	}
 }
+//-------------------------------End_Joystick_Input-------------------------------//
