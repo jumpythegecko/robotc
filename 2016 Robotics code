@@ -5,6 +5,7 @@
 #pragma config(Sensor, dgtl3,  sn22,           sensorSONAR_inch)
 #pragma config(Sensor, dgtl5,  sn33,           sensorSONAR_inch)
 #pragma config(Sensor, dgtl10, ,               sensorTouch)
+#pragma config(Motor,  port2,           light,         tmotorVex393HighSpeed_MC29, openLoop)
 #pragma config(Motor,  port7,           handServo,     tmotorServoStandard, openLoop)
 #pragma config(Motor,  port8,           servo1,        tmotorServoStandard, openLoop)
 #pragma config(Motor,  port9,           motor1,        tmotorServoContinuousRotation, openLoop)
@@ -21,6 +22,8 @@ int servopos;
 int dn;
 int lineThreshold;
 int servoOffsetAngle;
+int rightangle;
+int leftangle;
 float s1;
 float s2;
 float s3;
@@ -35,20 +38,23 @@ task main()
 {
 	hdown = false;
 	hopen = false;
-	right = false;
+	right = true;
 	left = false;
 	servopos = 0;
 	dn = 1;
+	rightangle = 0;
+	leftangle = -40;
 	us = false;
 	line = false;
 	ll1 = false;
 	ll2 = false;
 	ll3 = false;
 	lineThreshold = 1000;
-	servoOffsetAngle = 55;
+	servoOffsetAngle = 60;
 
 	while(1 == 1)
 	{
+		motor[light] = 100;
 		l1 = SensorValue[L1];
 		l2 = SensorValue[L2];
 		l3 = SensorValue[L3];
@@ -88,14 +94,27 @@ task main()
 			//deciding how to drive
 			
 			if(ll1){
-				
+				motor[motor1] = -35;
+				motor[servo1] = rightangle;
+				right = true;
+				left = false;
 			} else if(ll2){
-				motor[motor1] = vexRT[Ch3]/dn;
-				motor[servo1] = ((vexRT[Ch1] / 2)+55)*-1;
+				motor[motor1] = 35;
+				motor[servo1] = -20;
 			} else if(ll3){
-				
+				motor[motor1] = 35;
+				motor[servo1] = leftangle;
+				right = false;
+				left = true;
+			} else if(right){
+					motor[motor1] = 35;
+					motor[servo1] = rightangle;
+			} else if(left){
+					motor[motor1] = 35;
+					motor[servo1] = leftangle;
 			} else {
-				
+				motor[motor1] = 0;
+				motor[servo1] = 0;
 			}
 			
 		}
