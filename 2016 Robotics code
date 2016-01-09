@@ -5,7 +5,8 @@
 #pragma config(Sensor, dgtl3,  sn22,           sensorSONAR_inch)
 #pragma config(Sensor, dgtl5,  sn33,           sensorSONAR_inch)
 #pragma config(Sensor, dgtl10, ,               sensorTouch)
-#pragma config(Motor,  port2,           light,         tmotorVex393HighSpeed_MC29, openLoop)
+#pragma config(Motor,  port2,           right,         tmotorVex393_MC29, openLoop, driveRight)
+#pragma config(Motor,  port3,           left,          tmotorVex393_MC29, openLoop, driveLeft)
 #pragma config(Motor,  port7,           handServo,     tmotorServoStandard, openLoop)
 #pragma config(Motor,  port8,           servo1,        tmotorServoStandard, openLoop)
 #pragma config(Motor,  port9,           motor1,        tmotorServoContinuousRotation, openLoop)
@@ -16,8 +17,8 @@ bool hdown;
 bool hopen;
 bool line;
 bool us;
-bool left;
-bool right;
+bool Bleft;
+bool Bright;
 int servopos;
 int dn;
 int lineThreshold;
@@ -38,8 +39,8 @@ task main()
 {
 	hdown = false;
 	hopen = false;
-	right = true;
-	left = false;
+	Bright = true;
+	Bleft = false;
 	servopos = 0;
 	dn = 1;
 	rightangle = 0;
@@ -54,7 +55,7 @@ task main()
 
 	while(1 == 1)
 	{
-		motor[light] = 100;
+		//motor[light] = 100;
 		l1 = SensorValue[L1];
 		l2 = SensorValue[L2];
 		l3 = SensorValue[L3];
@@ -69,6 +70,9 @@ task main()
 					delay(250);
 				}
 			}
+			
+			//motor[left] = 35;
+			//motor[right] = -35;
 			
 			//reading sensor values
 			
@@ -92,30 +96,31 @@ task main()
 			}
 			
 			//deciding how to drive
+			//negative right is forward
 			
 			if(ll1){
-				motor[motor1] = -35;
-				motor[servo1] = rightangle;
-				right = true;
-				left = false;
+				motor[left] = 10;
+				motor[right] = -80;
+				Bright = true;
+				Bleft = false;
 			} else if(ll2){
-				motor[motor1] = 35;
-				motor[servo1] = -20;
+				motor[left] = 35;
+				motor[right] = -35;
 			} else if(ll3){
-				motor[motor1] = 35;
-				motor[servo1] = leftangle;
-				right = false;
-				left = true;
+				motor[left] = 80;
+				motor[right] = -10;
+				Bright = false;
+				Bleft = true;
 			} else if(right){
-					motor[motor1] = 35;
-					motor[servo1] = rightangle;
+				motor[left] = 10;
+				motor[right] = -80;
 			} else if(left){
-					motor[motor1] = 35;
-					motor[servo1] = leftangle;
+				motor[left] = 80;
+				motor[right] = -10;
 			} else {
-				motor[motor1] = 0;
-				motor[servo1] = 0;
+			
 			}
+			delay(250);
 			
 		}
 		//-------------------------------End_Line_Following-------------------------------//
@@ -144,8 +149,8 @@ task main()
 					delay(350);
 				}
 				}else if(s1>=s3){
-				left = true;
-				right = false;
+				Bleft = true;
+				Bright = false;
 				motor[motor1] = 75;
 				if(s3>=10.0){
 					motor[servo1] = -75;
@@ -155,8 +160,8 @@ task main()
 					motor[servo1] = -125;
 				}
 				} else if(s1<=s3){
-				left = false;
-				right = true;
+				Bleft = false;
+				Bright = true;
 				motor[motor1] = 75;
 				if(s1>=10.0){
 					motor[servo1] = -25;
@@ -239,3 +244,78 @@ task main()
 	}
 }
 //-------------------------------End_Joystick_Input-------------------------------//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			/*
+			l1 = SensorValue[L1];
+			l2 = SensorValue[L2];
+			l3 = SensorValue[L3];
+			if(l1>lineThreshold){
+				ll1 = true;
+			} else {
+				ll1 = false;
+			}
+			if(l2>lineThreshold){
+				ll2 = true;
+			} else {
+				ll2 = false;
+			}
+			if(l3>lineThreshold){
+				ll3 = true;
+			} else {
+				ll3 = false;
+			}
+			
+			//deciding how to drive
+			
+			if(ll1){
+				motor[motor1] = -35;
+				motor[servo1] = rightangle;
+				right = true;
+				left = false;
+			} else if(ll2){
+				motor[motor1] = 35;
+				motor[servo1] = -20;
+			} else if(ll3){
+				motor[motor1] = 35;
+				motor[servo1] = leftangle;
+				right = false;
+				left = true;
+			} else if(right){
+					motor[motor1] = 35;
+					motor[servo1] = rightangle;
+			} else if(left){
+					motor[motor1] = 35;
+					motor[servo1] = leftangle;
+			} else {
+				motor[motor1] = 0;
+				motor[servo1] = 0;
+			}
+		*/	
