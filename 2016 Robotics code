@@ -118,28 +118,34 @@ task main()
 			switch(atoi(lin)){     //deciding how to drive with a switch function
 			case 000:
 				//if none are on black, use previous line value
+				
 				test = 1;
 				switch(atoi(linP)){
 				case 001:
-					motor[servo1] = (servoOffsetAngle+40)*-1;
+					motor[servo1] = (servoOffsetAngle+50)*-1;
 					motor[motor1] = 30;
 					break;
 				case 010:
 					motor[motor1] = 30;
+					motor[servo1] = (servoOffsetAngle)*-1;
 					break;
 				case 100:
+					motor[servo1] = (servoOffsetAngle-50)*-1;
+					motor[motor1] = 30;
 					break;
 				}
+				
 				break;
 			case 001:
 				//go right//
 				motor[motor1] = 30;
-				motor[servo1] = (servoOffsetAngle+40)*-1;
+				motor[servo1] = (servoOffsetAngle+50)*-1;
 				test = 2;
 				break;
 			case 010:
 				//go forward//
 				motor[motor1] = 30;
+				motor[servo1] = (servoOffsetAngle)*-1;
 				test = 3;
 				break;
 			case 011:
@@ -149,6 +155,8 @@ task main()
 				break;
 			case 100:
 				//go left//
+				motor[motor1] = 30;
+				motor[servo1] = (servoOffsetAngle-50)*-1;
 				test = 5;
 				break;
 			case 101:
@@ -248,23 +256,19 @@ task main()
 			dn = 1;
 		}
 		motor[motor1] = vexRT[Ch3]/dn;
-		if(vexRT[Btn8U] == 1){
-			motor[handServo] = -100;
-		}
-		if(vexRT[Btn8D] == 1){
-			motor[handServo] = 100;
-		}
 		if(vexRT[Btn8L] == 1){
-			motor[handMotor] = 127;
 		}
 		if(vexRT[Btn8R] == 1){
-			motor[handMotor] = -127;
 		}
 
 		if(vexRT[Btn7U] == 1){
 			motor[handServo] = 35;
 			}else if(vexRT[Btn7D] == 1){
 			motor[handServo] = -35;
+			} else if(vexRT[Btn8U] == 1){
+				motor[handServo] = 127;
+			} else if(vexRT[Btn8D] == 1){
+				motor[handServo] = -127;
 			} else {
 			if(ball){
 				motor[handServo] = -12;
