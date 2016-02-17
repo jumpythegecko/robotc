@@ -113,7 +113,9 @@ task main()
 				lin += "0";
 			}
 
-
+			int lineSteer = 100;
+			int lineSteer2 = 55;
+			int motorSpeed = 30;
 
 			switch(atoi(lin)){     //deciding how to drive with a switch function
 			case 000:
@@ -122,29 +124,29 @@ task main()
 				test = 1;
 				switch(atoi(linP)){
 				case 001:
-					motor[servo1] = (servoOffsetAngle+50)*-1;
-					motor[motor1] = 30;
+					motor[servo1] = (servoOffsetAngle+lineSteer2)*-1;
+					motor[motor1] = motorSpeed;
 					break;
 				case 010:
-					motor[motor1] = 30;
+					motor[motor1] = motorSpeed;
 					motor[servo1] = (servoOffsetAngle)*-1;
 					break;
 				case 100:
-					motor[servo1] = (servoOffsetAngle-50)*-1;
-					motor[motor1] = 30;
+					motor[servo1] = (servoOffsetAngle-lineSteer2)*-1;
+					motor[motor1] = motorSpeed;
 					break;
 				}
 				
 				break;
 			case 001:
 				//go right//
-				motor[motor1] = 30;
-				motor[servo1] = (servoOffsetAngle+50)*-1;
+				motor[motor1] = motorSpeed;
+				motor[servo1] = (servoOffsetAngle+lineSteer)*-1;
 				test = 2;
 				break;
 			case 010:
 				//go forward//
-				motor[motor1] = 30;
+				motor[motor1] = motorSpeed;
 				motor[servo1] = (servoOffsetAngle)*-1;
 				test = 3;
 				break;
@@ -155,8 +157,8 @@ task main()
 				break;
 			case 100:
 				//go left//
-				motor[motor1] = 30;
-				motor[servo1] = (servoOffsetAngle-50)*-1;
+				motor[motor1] = motorSpeed;
+				motor[servo1] = (servoOffsetAngle-lineSteer)*-1;
 				test = 5;
 				break;
 			case 101:
