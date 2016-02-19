@@ -75,7 +75,7 @@ task main()
 		l1 = SensorValue[L1];
 		l2 = SensorValue[L2];
 		l3 = SensorValue[L3];
-		//-------------------------------Line_following-------------------------------//
+		//---------------------------------------------------------------Line_following---------------------------------------------------------------//
 		while(line == true){
 			if(vexRT[Btn5D] == 1){
 				if(line == true){
@@ -120,7 +120,7 @@ task main()
 			switch(atoi(lin)){     //deciding how to drive with a switch function
 			case 000:
 				//if none are on black, use previous line value
-				
+
 				test = 1;
 				switch(atoi(linP)){
 				case 001:
@@ -136,7 +136,7 @@ task main()
 					motor[motor1] = motorSpeed;
 					break;
 				}
-				
+
 				break;
 			case 001:
 				//go right//
@@ -187,9 +187,9 @@ task main()
 			//delay(25);
 
 		}
-		//-------------------------------End_Line_Following-------------------------------//
+		//---------------------------------------------------------------End_Line_Following---------------------------------------------------------------//
 
-		//-------------------------------Ultrasonic-------------------------------//
+		//---------------------------------------------------------------Ultrasonic---------------------------------------------------------------//
 		while(us == true){
 			if(vexRT[Btn6U] == 1){
 				us = false;
@@ -197,60 +197,78 @@ task main()
 			s1 = SensorValue[sn11];
 			s2 = SensorValue[sn22];
 			s3 = SensorValue[sn33];
-			if(s1>=15.0 && s2>=15.0 && s3>=15.0){
-				motor[motor1] = 73;
-				motor[servo1] = -57;
-				} else if(s2<=(s1||s3)){
-				if(s1>=s3){
-					motor[servo1] = -125;
-					delay(15);
-					motor[motor1] = -55;
-					delay(350);
-					}else{
-					motor[servo1] = 25;
-					delay(15);
-					motor[motor1] = -55;
-					delay(350);
-				}
-				}else if(s1>=s3){
-				Bleft = true;
-				Bright = false;
-				motor[motor1] = 75;
-				if(s3>=10.0){
-					motor[servo1] = -75;
-					} else if(s3>=8.0){
-					motor[servo1] = -100;
-					} else {
-					motor[servo1] = -125;
-				}
-				} else if(s1<=s3){
-				Bleft = false;
-				Bright = true;
-				motor[motor1] = 75;
-				if(s1>=10.0){
-					motor[servo1] = -25;
-					} else if(s1>=8.0){
-					motor[servo1] = 0;
-					} else {
-					motor[servo1] = 25;
-				}
-				motor[servo1] = 25;
-			} 
-			if(s1<=7.0 || s2<=7.75 || s3<=7.0){
-				motor[motor1] = 0;
-				if(right == true){
-					motor[servo1] = -125;
-					} else {
-					motor[servo1] = 25;
-				}
-				delay(15);
-				motor[motor1] = -55;
-				delay(350);
-			}
-		}
-		//-------------------------------End_Ultrasonic-------------------------------//
 
-		//-------------------------------Joystick_Input-------------------------------//
+			int sonLimS = 4;
+			int sonLim = 9;
+			string sonVals = "";
+
+
+
+			if(s3<sonLimS){
+				sonVals += "2";
+				} else if(s3<sonLim){   //sets the sonarValues string based on the value of the sensors
+				sonVals += "1";
+				} else {
+				sonVals += "0";
+			}
+			if(s2<sonLimS){
+				sonVals += "2";
+				} else if(s2<sonLim){
+				sonVals += "1";
+				} else {
+				sonVals += "0";
+			}
+			if(s1<sonLimS){
+				sonVals += "2";
+				} else if(s1<sonLim){
+				sonVals += "1";
+				} else {
+				sonVals += "0";
+			}
+
+			int slight = 70;
+			int hard = 100;
+			int motorSpeed = 40;
+
+			switch(atoi(sonVals)){    //moves the robot based on the sonarValues string
+			case 000://forward
+			case 101:
+				motor[motor1] = motorSpeed;
+				motor[servo1] = (servoOffsetAngle)*-1;
+				break;
+			case 001://slight left
+				motor[motor1] = motorSpeed;
+				motor[servo1] = (servoOffsetAngle-(slight))*-1;
+				break;
+			case 011://hard left
+				motor[motor1] = motorSpeed;
+				motor[servo1] = (servoOffsetAngle-(hard))*-1;
+				break;
+			case 100://slight right
+				motor[motor1] = motorSpeed;
+				motor[servo1] = (servoOffsetAngle+slight)*-1;
+				break;
+			case 110://hard right
+				motor[motor1] = motorSpeed;
+				motor[servo1] = (servoOffsetAngle+hard)*-1;
+				break;
+			case 020:
+			case 121:
+			case 120://for all 6 of these values, go back
+			case 021:
+			case 111:
+			case 010:
+				motor[motor1] = 0;
+				//motor[motor1] = motorSpeed*-1;
+				break;
+			}
+			delay(50);
+			motor[motor1] = 0;
+			motor[servo1] = (servoOffsetAngle)*-1;
+		}
+		//---------------------------------------------------------------End_Ultrasonic---------------------------------------------------------------//
+
+		//---------------------------------------------------------------Joystick_Input---------------------------------------------------------------//
 		motor[servo1] = ((vexRT[Ch1] / 2)+servoOffsetAngle)*-1;
 		if(vexRT[Btn5U] == 1){
 			dn = 3;
@@ -268,9 +286,9 @@ task main()
 			}else if(vexRT[Btn7D] == 1){
 			motor[handServo] = -35;
 			} else if(vexRT[Btn8U] == 1){
-				motor[handServo] = 127;
+			motor[handServo] = 127;
 			} else if(vexRT[Btn8D] == 1){
-				motor[handServo] = -127;
+			motor[handServo] = -127;
 			} else {
 			if(ball){
 				motor[handServo] = -12;
@@ -306,7 +324,7 @@ task main()
 		}
 	}
 }
-//-------------------------------End_Joystick_Input-------------------------------//
+//---------------------------------------------------------------End_Joystick_Input---------------------------------------------------------------//
 
 
 
