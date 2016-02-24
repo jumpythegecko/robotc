@@ -5,8 +5,6 @@
 #pragma config(Sensor, dgtl3,  sn22,           sensorSONAR_inch)
 #pragma config(Sensor, dgtl5,  sn33,           sensorSONAR_inch)
 #pragma config(Sensor, dgtl10, ,               sensorTouch)
-#pragma config(Motor,  port2,           right,         tmotorVex393_MC29, openLoop, driveRight)
-#pragma config(Motor,  port3,           left,          tmotorVex393_MC29, openLoop, driveLeft)
 #pragma config(Motor,  port6,           handMotor,     tmotorServoContinuousRotation, openLoop)
 #pragma config(Motor,  port7,           handServo,     tmotorServoContinuousRotation, openLoop)
 #pragma config(Motor,  port8,           servo1,        tmotorServoStandard, openLoop)
@@ -19,6 +17,7 @@ bool line;
 bool us;
 bool Bleft;
 bool Bright;
+bool right;
 int servopos;
 int dn;
 int lineThreshold;
@@ -54,6 +53,7 @@ task main()
 	Bright = true;
 	Bleft = false;
 	ball = false;
+	right = true;
 	servopos = 0;
 	dn = 1;
 	rightangle = 0;
@@ -190,6 +190,7 @@ task main()
 		//---------------------------------------------------------------End_Line_Following---------------------------------------------------------------//
 
 		//---------------------------------------------------------------Ultrasonic---------------------------------------------------------------//
+		right = true;
 		while(us == true){
 			if(vexRT[Btn6U] == 1){
 				us = false;
@@ -198,7 +199,7 @@ task main()
 			s2 = SensorValue[sn22];
 			s3 = SensorValue[sn33];
 
-			int sonLimS = 4;
+			int sonLimS = 4.5;
 			int sonLim = 9;
 			string sonVals = "";
 
@@ -232,34 +233,58 @@ task main()
 
 			switch(atoi(sonVals)){    //moves the robot based on the sonarValues string
 			case 000://forward
+			case 202:
 			case 101:
 				motor[motor1] = motorSpeed;
 				motor[servo1] = (servoOffsetAngle)*-1;
 				break;
 			case 001://slight left
+			case 011:
+			case 102:
+			case 112:
 				motor[motor1] = motorSpeed;
 				motor[servo1] = (servoOffsetAngle-(slight))*-1;
 				break;
-			case 011://hard left
+			case 002://hard left
+			case 012:
 				motor[motor1] = motorSpeed;
 				motor[servo1] = (servoOffsetAngle-(hard))*-1;
 				break;
 			case 100://slight right
+			case 110:
+			case 201:
+			case 211:
 				motor[motor1] = motorSpeed;
 				motor[servo1] = (servoOffsetAngle+slight)*-1;
 				break;
-			case 110://hard right
+			case 200://hard right
+			case 210:
 				motor[motor1] = motorSpeed;
 				motor[servo1] = (servoOffsetAngle+hard)*-1;
 				break;
 			case 020:
 			case 121:
-			case 120://for all 6 of these values, go back
+			case 120://for all 11 of these values, go back
 			case 021:
 			case 111:
 			case 010:
+			case 022:
+			case 122:
+			case 220:
+			case 221:
+			case 222:
 				motor[motor1] = 0;
-				//motor[motor1] = motorSpeed*-1;
+				delay(250);
+				motor[motor1] = motorSpeed*-1;
+				if(right){
+					motor[servo1] = (servoOffsetAngle-(hard))*-1;
+					} else {
+						motor[servo1] = (servoOffsetAngle+(hard))*-1;
+				}
+				delay(500);
+				motor[motor1] = 0;
+				motor[servo1] = (servoOffsetAngle)*-1;
+				delay(250);
 				break;
 			}
 			delay(50);
